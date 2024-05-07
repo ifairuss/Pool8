@@ -5,6 +5,8 @@ public class CueScript : MonoBehaviour
     [SerializeField] private Transform _cuePosition;
     [SerializeField] private Transform _whiteBallPosition;
 
+    [SerializeField] private Ball _ball;
+
     private Vector3 mousePosition;
 
     private float rotZ;
@@ -31,7 +33,7 @@ public class CueScript : MonoBehaviour
 
     private void Controller()
     {
-        if (Ball._travelSpeed < 0.3f)
+        if (_ball.TravelSpeed < 0.3f)
         {
             if (Input.GetMouseButton(0))
             {
