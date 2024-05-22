@@ -1,24 +1,33 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Hole : MonoBehaviour
 {
-    [SerializeField] private float _decreaseBall = 0.35f;
+    [SerializeField] private float _duration = 0.35f;
 
     private void OnTriggerStay(Collider other)
     {
-        _decreaseBall = Mathf.Clamp(_decreaseBall, 0.1f, 0.35f);
-
         if (other.CompareTag("Ball"))
         {
-            _decreaseBall -= 0.05f;
+            other.attachedRigidbody.velocity = Vector3.zero;
+            StartCoroutine(ChangeScaleRoutine(other));
+        }
 
-            other.gameObject.transform.localScale = new Vector3(_decreaseBall, _decreaseBall, _decreaseBall);
+    }
 
-            if(_decreaseBall <= 0.1f)
-            {
-                Destroy(other.gameObject);
-                _decreaseBall = 0.35f;
-            }
+    private IEnumerator ChangeScaleRoutine(Collider other)
+    {
+        var startScale = other.transform.localScale;
+        var remaingTime = _duration;
+
+        while (remaingTime >= 0)
+        {
+            remaingTime -= Time.deltaTime;
+            var lerpValue = Mathf.InverseLerp(0f, _duration, remaingTime);
+            other.transform.localScale = Vector3.Lerp(Vector3.zero, startScale, lerpValue);
+
+            yield return null;
         }
     }
 }
